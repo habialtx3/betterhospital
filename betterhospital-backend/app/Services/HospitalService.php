@@ -74,4 +74,16 @@ class HospitalService
  
         return $this->hospitalRepository->delete($id);
     }
+
+    public function attachSpecialist(int $hospitalId, int $specialistId){
+        $hospital = $this->hospitalRepository->getById($hospitalId,['id']);
+        $hospital->specialists()->syncWithoutDetaching($specialistId);
+    }
+
+    public function dettachSpecialist(int $hospitalId, int $specialistId)
+    {
+        $hospital = $this->hospitalRepository->getById($hospitalId,['id']);
+        $hospital->specialists()->detach($specialistId);
+    }
+
 }
