@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-class SpecialistRepostiory
+class SpecialistRepository
 {
 
 }
