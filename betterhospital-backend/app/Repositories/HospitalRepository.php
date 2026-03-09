@@ -17,7 +17,7 @@ class HospitalRepository
         return Hospital::create($data);
     }
 
-    public function edit(int $id, array $data){
+    public function update(int $id, array $data){
         $hospital = Hospital::findOrFail($id);
         $hospital->update($data);
         return $hospital;

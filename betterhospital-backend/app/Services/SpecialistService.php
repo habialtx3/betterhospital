@@ -55,9 +55,8 @@ class SpecialistService
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile){
             if(!empty($specialist->photo)){
                 $this->deletePhoto($specialist->photo);
-            }
-
-            $data['photo']->store('specialist','public');
+            }   
+            $data['photo'] = $this->uploadPhoto($data['photo']);
         }
             return $this->specialistRepository->update($id, $data);
     }
