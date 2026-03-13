@@ -45,7 +45,7 @@ class DoctorService
 
     public function create(array $data)
     {
-        if(!$this->hospitalSpecialistRepository->existForHospitalAndSpecialist(
+        if (!$this->hospitalSpecialistRepository->existForHospitalAndSpecialist(
             $data['hospital_id'],
             $data['specialist_id']
         )) {
@@ -54,16 +54,16 @@ class DoctorService
             ]);
         }
 
-        if(isset($data['photo']) && $data['photo'] instanceof UploadedFile){
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
 
         return $this->doctorRepository->create($data);
     }
 
-    public function update(int $id,array $data)
+    public function update(int $id, array $data)
     {
-        if(!$this->hospitalSpecialistRepository->existForHospitalAndSpecialist(
+        if (!$this->hospitalSpecialistRepository->existForHospitalAndSpecialist(
             $data['hospital_id'],
             $data['specialist_id']
         )) {
@@ -72,27 +72,64 @@ class DoctorService
             ]);
         }
 
-        $doctor = $this->doctorRepository->getById($id,['*']);
+        $doctor = $this->doctorRepository->getById($id, ['*']);
 
-        if(isset($data['photo']) && $data['photo'] instanceof UploadedFile){
-            if(!empty($doctor->photo)){
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            if (!empty($doctor->photo)) {
                 $this->deletePhoto($doctor->photo);
             }
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
 
-        return $this->doctorRepository->update($id,$data);
+        return $this->doctorRepository->update($id, $data);
     }
-    
+
 
     public function delete(int $id)
     {
-        $doctor = $this->doctorRepository->getById($id,['*']);
-        
-        if($doctor->photo){
+        $doctor = $this->doctorRepository->getById($id, ['*']);
+
+        if ($doctor->photo) {
             $this->deletePhoto($doctor->photo);
         }
 
         $this->doctorRepository->delete($id);
+    }
+
+    public function filterBySpecialistAndHospital(int $hospitalId, int $specialistId)
+    {
+        return $this->doctorRepository->filterBySpecialistAndHospital($hospitalId, $specialistId);
+    }
+
+    public function getAvailableSlot(int $doctorId)
+    {
+        $doctor = $this->doctorRepository->getById($doctorId, ['id']);
+
+        $timeSlots = ['10:30', '11:30', '13:30', '14:30', '15:30', '16:30'];
+        $dates = collect([
+            now()->addDays(1)->startOfDay(),
+            now()->addDays(2)->startOfDay(),
+            now()->addDays(3)->startOfDay(),
+        ]);
+
+        $availablity = [];
+
+        foreach ($dates as $date) {
+            $dateStr = $date->toDateString();
+            $availablity[$dateStr] = [];
+
+            foreach ($timeSlots as $time) {
+                $isTaken = $doctor->bookingTransactions()
+                    ->whereDate('started_at', $dateStr)
+                    ->whereTime('time_at', $time)
+                    ->exists();
+
+                if (!$isTaken) {
+                $availablity[$dateStr][] = $time;
+                }
+            }
+        }
+
+        return $availablity;
     }
 }
