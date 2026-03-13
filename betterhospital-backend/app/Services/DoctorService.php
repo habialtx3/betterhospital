@@ -95,4 +95,9 @@ class DoctorService
 
         $this->doctorRepository->delete($id);
     }
+
+    public function filterBySpecialistAndHospital(int $hospitalId , int $specialistId)
+    {
+        return $this->doctorRepository->filterBySpecialistAndHospital($hospitalId,$specialistId);
+    }
 }
