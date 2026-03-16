@@ -22,8 +22,8 @@ class SpecialistAndHospitalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-
+            'hospital_id' => 'required|integer|exists:hospitals.id',
+            'specialist_id' => 'required|integer|exists:specialists.id',
         ];
     }
 }
