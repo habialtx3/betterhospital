@@ -28,4 +28,5 @@ Route::get('/doctors/{doctorId}/available-slots',[DoctorController::class,'avail
 
 Route::get('my-orders',[MyOrderController::class,'index']);
 Route::post('my-orders',[MyOrderController::class,'store']);
-Route::get('my-orders/{id}',[MyOrderController::class,'show']);
+Route::get('my-orders/{id}',[MyOrderController::class,'show'    ]);
+
