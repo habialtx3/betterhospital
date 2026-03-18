@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\BookingTransactionRepository;
 use App\Repositories\DoctorRepository;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class BookingTransactionService
@@ -60,7 +61,9 @@ class BookingTransactionService
 
     public function create(array $data)
     {
-        $data['user_id'] = auth()->id();
+        $user = Auth::user();
+        $userId = $user->id;
+        $data['user_id'] = $userId;
 
         if ($this->bookingTransactionRepository->isTimeSlotTakenForDoctor($data['doctor_id'], $data['started_at'], $data['time_at'])) {
             throw ValidationException::withMessages([
