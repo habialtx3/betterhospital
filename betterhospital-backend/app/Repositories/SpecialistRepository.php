@@ -24,7 +24,8 @@ class SpecialistRepository
                     $q->where('specialist_id', $id)
                         ->with('hospital:id,name,city,post_code');
                 }
-            ]);
+            ])
+            ->findOrFail($id);
     }
 
     public function create(array $data) {
