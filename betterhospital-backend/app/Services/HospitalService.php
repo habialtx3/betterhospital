@@ -30,9 +30,9 @@ class HospitalService
         return $photo->store('hospital', 'public');
     }
 
-    private function deletePhoto(UploadedFile $photo)
+    private function deletePhoto(string $photoPath)
     {
-        $relativePath = 'hospital/' . basename($photo);
+        $relativePath = 'hospital/' . basename($photoPath);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }

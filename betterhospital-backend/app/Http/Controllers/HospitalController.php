@@ -40,7 +40,7 @@ class HospitalController extends Controller
     public function store(HospitalRequest $request)
     {
         $hospital = $this->hospitalService->create($request->validated());
-        return response()->json(new HospitalResource('hospital'), 201);
+        return response()->json(new HospitalResource($hospital), 201);
     }
 
     public function update(HospitalRequest $request, $id)
