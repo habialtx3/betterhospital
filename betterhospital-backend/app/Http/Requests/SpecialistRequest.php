@@ -24,7 +24,7 @@ class SpecialistRequest extends FormRequest
         $id = $this->route('specialist');
 
         return [
-            'name' => 'required|string|unique:specialist,name,'.$id,
+            'name' => 'required|string|unique:specialists,name,'.$id,
             'photo' => $this->isMethod('post') ? 'required|image|max:2048' : 'sometimes|image|max:2048', 
             'about' => 'required|string',
             'price' => 'required|numeric|min:0'
